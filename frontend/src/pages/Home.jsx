@@ -8,11 +8,14 @@ import icon03 from '../assets/images/icon03.png'
 import featureTmg from '../assets/images/about.png'
 import vidoIcon from '../assets/images/video-icon.png'
 import avatarIcon from '../assets/images/avatar-icon.png'
+import fapImag from '../assets/images/faq-img.png'
 import { Link } from 'react-router-dom'
 import { BsArrowRight } from 'react-icons/bs';
 import About from '../components/about/About'
 import ServicesListe from '../components/services/ServicesListe'
 import DoctoreList from '../components/doctors/DoctoreList'
+import FaqList from '../components/faqSectinon/FaqList'
+import Testimonil from '../components/testimonail/testimonil'
 
 
 function Home() {
@@ -200,19 +203,53 @@ function Home() {
           </div>
         </div>
       </section>
-
+      {/* ########################################## */}
       <section>
         <div className="container">
-        <div className="xl:w-[470px] mx-auto">
+          <div className="xl:w-[470px] mx-auto">
             <h2 className="heading text-center"> Our great doctors </h2>
             <p className="text__para text-center">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius, fugiat.
               Tempore tenetur explicabo rem!
             </p>
           </div>
-          <DoctoreList/>
+          <DoctoreList />
         </div>
       </section>
+      {/* ############################################# */}
+      <section>
+        <div className="container">
+          <div className="flex justify-between gap-[50px] lg:gap-0">
+            <div className="w-1/2 hidden md:block">
+              <img src={fapImag} alt="" />
+            </div>
+
+            <div className=' w-full md:w-1/2'>
+              <h2 className=' heading'>
+                Most question by our beloved patients
+              </h2>
+              <FaqList />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ############################# */}
+
+      <section>
+        <div className="container">
+          <div className="xl:w-[470px] mx-auto">
+            <h2 className="heading text-center"> what our patient say </h2>
+            <p className="text__para text-center">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius, fugiat.
+              Tempore tenetur explicabo rem trbvbttb car.
+            </p>
+          </div>
+          <Testimonil/>
+
+        </div>
+      </section>
+
     </>
   )
 }
