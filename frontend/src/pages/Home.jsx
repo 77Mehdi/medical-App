@@ -15,7 +15,7 @@ import About from '../components/about/About'
 import ServicesListe from '../components/services/ServicesListe'
 import DoctoreList from '../components/doctors/DoctoreList'
 import FaqList from '../components/faqSectinon/FaqList'
-import Testimonil from '../components/testimonail/testimonil'
+import Testimonial from '../components/testimonail/testimonil'
 
 
 function Home() {
@@ -245,7 +245,7 @@ function Home() {
               Tempore tenetur explicabo rem trbvbttb car.
             </p>
           </div>
-          <Testimonil/>
+          <Testimonial/>
 
         </div>
       </section>
