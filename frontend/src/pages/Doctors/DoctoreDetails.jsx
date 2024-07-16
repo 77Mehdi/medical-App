@@ -3,6 +3,7 @@ import doctorImg from '../../assets/images/doctor-img03.png'
 import starIcon from '../../assets/images/Star.png'
 import DoctorAbout from './DoctorAbout'
 import Feedback from './Feedback'
+import SidelPanel from './SidelPanel'
 
 function DoctoreDetails() {
 
@@ -58,7 +59,9 @@ function DoctoreDetails() {
               </div>
             </div>
 
-            <div></div>
+            <div>
+              <SidelPanel/>
+            </div>
           </div>
         </div>
       </section>
