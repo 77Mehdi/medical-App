@@ -48,7 +48,7 @@ export const register = async (req, res) => {
         }
 
         try {
-            generatTokenAndCookie(user._id, res);
+            generatTokenAndCookie(user, res);
             await user.save();
             return res.status(200).json({ success: true, msg: 'User successfully created' });
         } catch (error) {
@@ -90,7 +90,7 @@ export const Login = async (req, res) => {
             return res.status(400).json({ msg: "invalid password" })
         }
         //make token
-        const token = generatTokenAndCookie(user._id, res);
+        const token = generatTokenAndCookie(user , res);
        
 
         const { password, role, appointments, ...rest } = user._doc;

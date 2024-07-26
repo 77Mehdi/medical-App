@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import authrouter from './router/auth.js'
 import userRout from './router/userRout.js'
 import DoctorRoute from './router/doctorRoute.js'
+import reviewRoute from './router/reviw.js'
 
 dotenv.config()
 
@@ -24,6 +25,8 @@ app.use(cors(corsOption))
 app.use('/api/auth',authrouter)
 app.use('/api/users',userRout)
 app.use('/api/doctors',DoctorRoute)
+app.use('/api/reviews',reviewRoute)
+
 
 // databese conect
 
