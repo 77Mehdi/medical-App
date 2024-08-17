@@ -1,10 +1,10 @@
 import React from 'react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import logo from "../../assets/images/01medical-logo.jpg"
 import userImg from '../../assets/images/avatar-icon.png'
 import { NavLink, Link } from 'react-router-dom'
-import {BiMenu} from 'react-icons/bi'
-
+import { BiMenu } from 'react-icons/bi'
+import { AuthContext } from '../../context/authContexts'
 
 
 const navLink = [
@@ -34,25 +34,27 @@ function Header() {
 
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+  const { user, role, token } = useContext(AuthContext)
+  // console.log(user)
 
-  const handleStixkyHeader = ()=>{
-    window.addEventListener('scroll',()=>{
-      if(document.body.scrollTop>80 || document.documentElement.scrollTop>80){
+  const handleStixkyHeader = () => {
+    window.addEventListener('scroll', () => {
+      if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
         headerRef.current.classList.add('sticky__header')
-      }else{
+      } else {
         headerRef.current.classList.remove('sticky__header')
       }
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     handleStixkyHeader();
 
-    return ()=> window.removeEventListener('scroll',handleStixkyHeader)
+    return () => window.removeEventListener('scroll', handleStixkyHeader)
   })
 
 
-  const toggleMenu =()=> menuRef.current.classList.toggle('show__menu')
+  const toggleMenu = () => menuRef.current.classList.toggle('show__menu')
 
 
   return (
@@ -78,23 +80,26 @@ function Header() {
             </ul>
           </div>
           <div className=' flex items-center gap-4 '>
-            <div className=' hidden '>
-              <Link to='/'>
+
+            {token && user ? (<div className=' hidden '>
+              <Link to={`${role==='doctor'?'/doctors/profile/me':'/users/profile/me'}`}>
                 <figure className=' w-[35px] h-[35px] rounded-full cursor-pointer'>
-                  <img src={userImg} alt="" className=' w-full rounded-full' />
+                  <img src={user?.photo} alt="" className=' w-full rounded-full' />kjkjkjkj
                 </figure>
+                <h2>{user?.name}</h2>
               </Link>
-              </div>
-              <Link to='/login'>
+            </div>) :
+              (<Link to='/login'>
                 <button className=' bg-primaryColor py-2 px-6 text-white font-[600] h-[40px] flex items-center  justify-center rounded-[50px]'>
                   Login
                 </button>
-              </Link>
+              </Link>)
+            }
 
-              <span className=' md:hidden' onClick={toggleMenu}>
-                    <BiMenu className=' w-6 h-6 cursor-pointer'/>
-              </span>
-            
+            <span className=' md:hidden' onClick={toggleMenu}>
+              <BiMenu className=' w-6 h-6 cursor-pointer' />
+            </span>
+
           </div>
 
         </div>

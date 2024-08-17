@@ -1,38 +1,86 @@
 import React, { useState } from 'react'
 import signupImg from '../assets/images/signup.gif'
 import avatar from '../assets/images/doctor-img03.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import uolodImgeToCloudinaray from '../utils/uolodCloudinaray'
+import { BASE_URL } from '../config'
+import { toast } from 'react-toastify'
+import HashLoader from 'react-spinners/HashLoader';
+
+
+
+
 
 function Signup() {
-   
-  const [selectedFile,setSelectedFile]=useState(null)
-  const [previewURL,setpreviewURL]=useState(null)
+
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewURL, setpreviewURL] = useState(null)
+  const [Loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
-    name:'',
+    name: '',
     email: '',
     password: '',
-    photo:'',
-    gender:'',
-    role:'patient'
+    photo: '',
+    gender: 'male',
+    role: 'patient'
   })
+
+  const navigate = useNavigate()
+
 
   const handelForm = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
 
-  const handelFilechange= async(e)=>{
-    const file = event.target.files[0]
-    
-    console.log(file)
+  const handelFilechange = async (e) => {
+    const file = e.target.files[0]
+
+    const result = await uolodImgeToCloudinaray(file);
+    // console.log('Image uploaded successfully:', result);
+
+    setpreviewURL(result.url)
+    setSelectedFile(result.url)
+    setFormData({ ...formData, photo: result.url })
   }
- 
 
 
-  const submitHandel = async (e)=>{
+  const submitHandel = async (e) => {
     e.preventDefault()
+    setLoading(true)
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    });
+
+    // console.log('first',formData)
+
+      const { msg } = await res.json()
+
+      if (!res.ok) {
+        throw new Error(msg)
+      }
+
+      setLoading(false)
+      toast.success(msg)
+      navigate('/login')
+
+    } catch (error) {
+      toast.error(error.message)
+      setLoading(false)
+    }
   }
+
+
+
+
+
 
   return (
     <>
@@ -56,7 +104,7 @@ function Signup() {
                   <input
                     type="text"
                     placeholder='Full Name'
-                    name='text'
+                    name='name'
                     value={formData.name}
                     onChange={handelForm}
                     className=' w-full pr-4 px-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer'
@@ -112,9 +160,9 @@ function Signup() {
                 </div>
 
                 <div className=' mb-5 flex items-center gap-3'>
-                  <figure className='w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center '>
-                    <img src={avatar} alt="" className=' w-full rounded-full' />
-                  </figure>
+                  {selectedFile && <figure className='w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center '>
+                    <img src={previewURL} alt="" className=' w-full rounded-full' />
+                  </figure>}
 
                   <div className=' relative w-[130px] h-[50px]'>
                     <input
@@ -135,8 +183,12 @@ function Signup() {
                 </div>
 
                 <div className=' mt-7'>
-                  <button type='submit' className=' w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg px-4 py-3'>
-                    Register
+                  <button
+                    disabled={Loading && true}
+                    type='submit'
+                    className=' w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg px-4 py-3'
+                  >
+                    {Loading ? <HashLoader size={35} color='#ffffff'/> : 'Sign Up'}
                   </button>
                 </div>
                 <p className=' mt-5 text-textColor text-center'>
