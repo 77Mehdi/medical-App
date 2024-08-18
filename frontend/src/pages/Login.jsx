@@ -3,6 +3,7 @@ import { Link ,useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../config'
 import { toast } from 'react-toastify'
 import { AuthContext } from '../context/authContexts.jsx';
+import HashLoader from 'react-spinners/HashLoader.js';
 
 
 
@@ -36,9 +37,9 @@ function Login() {
       });
 
       
-
       const result = await res.json()
-// console.log('first',result)
+      console.log('first',result)
+
       if (!res.ok) {
         throw new Error(result.msg)
       }
@@ -78,7 +79,7 @@ function Login() {
             Hello! <span className=' text-primaryColor'>Welcome</span> Back 🎉
           </h3>
 
-          <form className='py-4 md:py-0'onSubmit={submitHandel}> 
+          <form className='py-4 md:py-0' onSubmit={submitHandel}> 
             <div className="mb-5">
               <input
                 type="email"
@@ -103,7 +104,7 @@ function Login() {
             </div>
             <div className=' mt-7'>
               <button type='submit' className=' w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg px-4 py-3'>
-                Login
+                {Loading ? <HashLoader size={25} color='#fff'/> : 'Login'}
               </button>
             </div>
             <p className=' mt-5 text-textColor text-center'>

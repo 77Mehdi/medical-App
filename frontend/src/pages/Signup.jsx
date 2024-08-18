@@ -14,15 +14,15 @@ import HashLoader from 'react-spinners/HashLoader';
 function Signup() {
 
   const [selectedFile, setSelectedFile] = useState(null)
-  const [previewURL, setpreviewURL] = useState(null)
+  const [previewURL, setpreviewURL] = useState("")
   const [Loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    photo: '',
-    gender: 'male',
+    photo: selectedFile,
+    gender: '',
     role: 'patient'
   })
 
@@ -153,8 +153,9 @@ function Signup() {
                       value={formData.gender}
                       onChange={handelForm}
                       className=' text-textColor font-semibold text-[15px] leading-7 px-4 py-3 focus:outline-none'>
+                      <option value="">Select</option>
                       <option value="male">Male</option>
-                      <option value="female">Female</option>
+                       <option value="female">Female</option>
                     </select>
                   </label>
                 </div>

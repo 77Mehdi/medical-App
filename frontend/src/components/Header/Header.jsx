@@ -81,12 +81,13 @@ function Header() {
           </div>
           <div className=' flex items-center gap-4 '>
 
-            {token && user ? (<div className=' hidden '>
+            {token && user ? (<div className=''>
               <Link to={`${role==='doctor'?'/doctors/profile/me':'/users/profile/me'}`}>
-                <figure className=' w-[35px] h-[35px] rounded-full cursor-pointer'>
-                  <img src={user?.photo} alt="" className=' w-full rounded-full' />kjkjkjkj
+                <figure className=' w-[35px] h-[35px] rounded-full cursor-pointer flex'>
+                  <img src={user?.photo} alt="" className=' w-full rounded-full' />
+                  {/* <h2 className='  flex justify-center items-center  px-4'>{user?.name}</h2> */}
                 </figure>
-                <h2>{user?.name}</h2>
+                
               </Link>
             </div>) :
               (<Link to='/login'>

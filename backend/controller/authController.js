@@ -89,11 +89,13 @@ export const Login = async (req, res) => {
         if (!isPassword) {
             return res.status(400).json({ msg: "invalid password" })
         }
+        // console.log('my user',user)
         //make token
         const token = generatTokenAndCookie(user , res);
        
 
         const { password, role, appointments, ...rest } = user._doc;
+       
 
         return res.status(200).json({ status: true, msg: "Successfully logged in",token, data: { ...rest }, role });
     } catch (error) {
