@@ -1,13 +1,28 @@
 import User from '../models/UserSchema.js'
 import Booking from '../models/BookingSchema.js'
 import Doctor from '../models/DoctorSchema.js'
+import bcrypt from 'bcryptjs'
+
 
 export const updateUser = async (req, res) => {
     const id = req.params.id;
+    const { name, email, password, photo, gender } = req.body;
+
     try {
+
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(password, salt)
+
         const updateuser = await User.findByIdAndUpdate(
             id,
-            { $set: req.body },
+            {
+                name,
+                email,
+                password: hashPassword,
+                photo,
+                gender,
+
+            },
             { new: true }
         );
         res.status(200).json({ success: true, msg: "Update user success", data: updateuser })
@@ -92,7 +107,7 @@ export const getMyAppointments = async (req, res) => {
 
         // 3 get the doctors using doctor id using step 2
         const doctors = await Doctor.find({ id: { $in: doctorId } }).select('-password')
-        
+
 
         res.status(200).json({
             success: true,

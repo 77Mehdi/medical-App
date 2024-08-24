@@ -10,7 +10,7 @@ export const authenticate = async (req, res, next) => {
     const authToken = req.headers.authorization;
 
     if (!authToken || !authToken.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, msg: 'No token ' })
+        return res.status(401).json({ success: false, msg: 'No token fond' })
     }
 
     try {
