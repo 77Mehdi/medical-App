@@ -67,11 +67,11 @@ export const getAllDoctor = async (req, res) => {
     }
 }
 
-export const getDoctorProfile = async (req,res)=>{
+export const getDoctorProfile = async (req,res)=>{ 
 
-    const doctorId = req.userId
+    const doctorId = req.userId;
 
-
+   // console.log('Request reached getDoctorProfile', req.userId);
     try {
         const doctor = await Doctor.findById(doctorId)
 
@@ -79,8 +79,8 @@ export const getDoctorProfile = async (req,res)=>{
             return res.status(404).json({ success: false, msg: "Doctor not found" })
         }
 
-        const { password, ...rest } = doctor._doc
-        const appointments = await Booking.find({doctor:doctorId})
+        const { password, ...rest } = doctor._doc;
+        const appointments = await Booking.find({doctor:doctorId});
 
         res.status(200).json({
             success: true,
@@ -95,8 +95,6 @@ export const getDoctorProfile = async (req,res)=>{
         })
     }
 }
-
-
 
 
 

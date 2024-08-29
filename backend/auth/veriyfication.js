@@ -6,6 +6,8 @@ import User from '../models/UserSchema.js'
 
 
 export const authenticate = async (req, res, next) => {
+    
+   // console.log('Authenticate middleware triggered');
 
     const authToken = req.headers.authorization;
 
@@ -20,7 +22,7 @@ export const authenticate = async (req, res, next) => {
         req.userId = virfytokin.id
         req.role = virfytokin.role
 
-        // console.log(virfytokin.role)
+         //console.log(virfytokin.id)
         next()
 
     } catch (error) {
@@ -28,7 +30,7 @@ export const authenticate = async (req, res, next) => {
             return res.status(401).json({ msg: 'Token is expired' });
         }
 
-        return res.status(401).json({ success: false, msg: 'Invalid token' });
+        return res.status(401).json({ success: false, msg: `Invalid token :: ${error.message}` });
     }
 }
 

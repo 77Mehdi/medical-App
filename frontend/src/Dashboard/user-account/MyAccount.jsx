@@ -17,7 +17,7 @@ function MyAccount() {
 
     const {data:userData,loading,error}  = useGetProfile(`${BASE_URL}/api/users/profile/me`)
 
-    // console.log(userData)
+    // console.log("userData",loading)
 
     const handelLogin = () => {
         dispatch({ type: "LOGOUT" });

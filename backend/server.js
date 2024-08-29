@@ -8,16 +8,18 @@ import userRout from './router/userRout.js'
 import DoctorRoute from './router/doctorRoute.js'
 import reviewRoute from './router/reviw.js'
 
+
 dotenv.config()
 
 
 
 const app = express();
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 8000
 
 const corsOption ={
     origin:true
 }
+
 
 app.use(express.json())
 app.use(cookieParser())
