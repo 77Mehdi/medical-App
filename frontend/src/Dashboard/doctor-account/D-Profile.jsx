@@ -1,25 +1,44 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
+import uolodImgeToCloudinaray from '../../utils/uolodCloudinaray'
+import { BASE_URL, token } from '../../config'
+import { toast } from 'react-toastify'
 
 
 
-function Profile() {
+function Profile({ doctorData }) {
 
 
   const [formData, setformData] = useState({
     name: '',
-    email: '',
     phone: '',
     bio: '',
     gender: '',
     specialization: '',
-    ticketPrice: 0,
-    qualifications: [{ startingDate: '', endingDate: '', university: '', degree: '' }],
-    experiences: [{ startingDate: '', endingDate: '', position: '', hospital: '' }],
-    timeSlots: [{ day: '', endingTime: '', startingTime: '', }],
+    ticketPrice: null,
+    qualifications: [],
+    experiences: [],
+    timeSlots: [],
     about: '',
-    photo:null,
+    photo: null,
   })
+
+  useEffect(() => {
+    setformData({
+      name: doctorData?.name,
+      email: doctorData?.email,
+      phone: doctorData?.phone,
+      bio: doctorData?.bio,
+      gender: doctorData?.gender,
+      specialization: doctorData?.specialization,
+      ticketPrice: doctorData?.ticketPrice,
+      qualifications: doctorData?.qualifications,
+      experiences: doctorData?.experiences,
+      timeSlots: doctorData?.timeSlots,
+      about: doctorData?.about,
+      photo: doctorData?.photo,
+    })
+  }, [doctorData])
 
 
   const handelInputChange = (e) => {
@@ -27,18 +46,142 @@ function Profile() {
     setformData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handelFilechange=()=>{
+  const handelFilechange = async (e) => {
 
+    const file = e.target.files[0];
+    const data = await uolodImgeToCloudinaray(file);
+
+    setformData({ ...formData, photo: data?.url });
   }
 
-  const  updateProfileHandeler =async(e)=>{
+
+  const updateProfileHandeler = async (e) => {
     e.preventDefault()
+
+    try {
+
+      const res = await fetch(`${BASE_URL}/api/doctors/${doctorData._id}`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const result = await res.json()
+
+      if (!res.ok) {
+        throw Error(result.message)
+      }
+
+      toast.success(result.msg)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+
+
+    } catch (err) {
+      toast.error(err.message)
+    }
   }
-  
-  const addQualification =(e)=>{
+
+  // ################# inpute function ################
+  const addItem = (key, item) => {
+
+    setformData(prev => ({ ...prev, [key]: [...prev[key], item] }))
+  }
+
+  const handeleReusableInputChangeFunc = (key, index, e) => {
+
+    const { name, value } = e.target
+    setformData(prev => {
+      const updateItems = [...prev[key]]
+
+      updateItems[index][name] = value
+
+      return {
+        ...prev,
+        [key]: updateItems,
+      }
+    })
+  }
+
+  const deleteItem = (key, index) => {
+    setformData(prev => ({ ...prev, [key]: prev[key].filter((_, i) => i != index) }))
+  }
+
+  // ################# Qualifications  function #############################
+  const addQualification = (e) => {
     e.preventDefault()
+
+    addItem('qualifications', {
+      startingDate: '',
+      endingDate: '',
+      university: '',
+      degree: '',
+    })
+  }
+
+
+  const handeleQualificationChange = (e, index) => {
+
+    handeleReusableInputChangeFunc('qualifications', index, e)
+  }
+
+  const deletQualification = (e, index) => {
+    e.preventDefault()
+
+    deleteItem('qualifications', index)
+  }
+
+  // ###################  Experience function ###########################
+  const addExperience = (e) => {
+    e.preventDefault()
+
+    addItem('experiences', {
+      startingDate: '',
+      endingDate: '',
+      position: '',
+      hospital: '',
+    })
   }
   //console.log("first",formData)
+
+  const handeleExperienceChange = (e, index) => {
+
+    handeleReusableInputChangeFunc('experiences', index, e)
+  }
+
+  const deletExperience = (e, index) => {
+    e.preventDefault()
+
+    deleteItem('experiences', index)
+  }
+
+  // ###################  TimeSlots function ###########################
+
+  const addTimeSlots = (e) => {
+    e.preventDefault()
+
+    addItem('timeSlots', {
+      day: '',
+      endingTime: '',
+      startingTime: '',
+    })
+  }
+  //console.log("first",formData)
+
+  const handeleTimeSlotsChange = (e, index) => {
+
+    handeleReusableInputChangeFunc('timeSlots', index, e)
+  }
+
+  const deletTimeSlots = (e, index) => {
+    e.preventDefault()
+
+    deleteItem('timeSlots', index)
+  }
+
 
   return (
     <div>
@@ -63,8 +206,7 @@ function Profile() {
           <input
             type="email"
             name='email'
-            value={formData.email}
-            onChange={handelInputChange}
+            value={doctorData.email}
             placeholder='Email'
             readOnly
             aria-readonly
@@ -108,7 +250,7 @@ function Profile() {
             </div>
             <div>
               <p className="form__label">Specialization*</p>
-              <select name="gender" value={formData.specialization} onChange={handelInputChange} className=' form__input py-3.5'>
+              <select name="specialization" value={formData.specialization} onChange={handelInputChange} className=' form__input py-3.5'>
                 <option value="">select</option>
                 <option value="surgeon">Surgeon</option>
                 <option value="neurologist">Neurologist</option>
@@ -135,6 +277,7 @@ function Profile() {
                       name='startingDate'
                       value={item.startingDate}
                       className='form__input'
+                      onChange={e => handeleQualificationChange(e, index)}
                     />
                   </div>
                   <div>
@@ -144,6 +287,7 @@ function Profile() {
                       name='endingDate'
                       value={item.endingDate}
                       className='form__input'
+                      onChange={e => handeleQualificationChange(e, index)}
                     />
                   </div>
                 </div>
@@ -155,6 +299,7 @@ function Profile() {
                       name='degree'
                       value={item.degree}
                       className='form__input'
+                      onChange={e => handeleQualificationChange(e, index)}
                     />
                   </div>
                   <div>
@@ -164,18 +309,23 @@ function Profile() {
                       name='university'
                       value={item.university}
                       className='form__input'
+                      onChange={e => handeleQualificationChange(e, index)}
                     />
                   </div>
                 </div>
 
-                <button className=' bg-red-600 p-2 rounded-full text-[18px] mt-2 mb-[30px] cursor-pointer'>
+                <button
+                  onClick={e => deletQualification(e, index)}
+                  className=' bg-red-600 p-2 rounded-full text-[18px] mt-2 mb-[30px] cursor-pointer'>
                   <AiOutlineDelete />
                 </button>
               </div>
             </div>
           ))}
 
-          <button className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>Add Qualification</button>
+          <button onClick={addQualification} className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>
+            Add Qualification
+          </button>
         </div>
         <div className=' mb-5'>
           <p className=' form__label'>Experiences*</p>
@@ -190,6 +340,7 @@ function Profile() {
                       name='startingDate'
                       value={item.startingDate}
                       className='form__input'
+                      onChange={e => (handeleExperienceChange(e, index))}
                     />
                   </div>
                   <div>
@@ -199,6 +350,7 @@ function Profile() {
                       name='endingDate'
                       value={item.endingDate}
                       className='form__input'
+                      onChange={e => (handeleExperienceChange(e, index))}
                     />
                   </div>
                 </div>
@@ -210,6 +362,7 @@ function Profile() {
                       name='position'
                       value={item.position}
                       className='form__input'
+                      onChange={e => (handeleExperienceChange(e, index))}
                     />
                   </div>
                   <div>
@@ -219,18 +372,25 @@ function Profile() {
                       name='hospital'
                       value={item.hospital}
                       className='form__input'
+                      onChange={e => (handeleExperienceChange(e, index))}
                     />
                   </div>
                 </div>
 
-                <button className=' bg-red-600 p-2 rounded-full text-[18px] mt-2 mb-[30px] cursor-pointer'>
+                <button
+                  onClick={e => deletExperience(e, index)}
+                  className=' bg-red-600 p-2 rounded-full text-[18px] mt-2 mb-[30px] cursor-pointer'>
                   <AiOutlineDelete />
                 </button>
               </div>
             </div>
           ))}
 
-          <button className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>Add Experience</button>
+          <button
+            onClick={addExperience}
+            className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>
+            Add Experience
+          </button>
         </div>
         <div className=' mb-5'>
           <p className=' form__label'>Time Slots*</p>
@@ -240,7 +400,12 @@ function Profile() {
                 <div className=' grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5'>
                   <div>
                     <p className='form__label'>Day*</p>
-                    <select name="day" value={item.day} className="form__input py-3.5">
+                    <select
+                      name="day"
+                      value={item.day}
+                      className="form__input py-3.5"
+                      onChange={e => handeleTimeSlotsChange(e, index)}
+                    >
                       <option value="">Select a day</option>
                       <option value="sunday">Sunday</option>
                       <option value="monday">Monday</option>
@@ -258,6 +423,7 @@ function Profile() {
                       name='startingTime'
                       value={item.startingTime}
                       className='form__input'
+                      onChange={e => handeleTimeSlotsChange(e, index)}
                     />
                   </div>
                   <div>
@@ -267,10 +433,13 @@ function Profile() {
                       name='endingTime'
                       value={item.endingTime}
                       className='form__input'
+                      onChange={e => handeleTimeSlotsChange(e, index)}
                     />
                   </div>
                   <div className=' flex items-center'>
-                    <button className=' bg-red-600 p-2 rounded-full text-[18px] mt-6  cursor-pointer'>
+                    <button
+                      onClick={e => deletTimeSlots(e, index)}
+                      className=' bg-red-600 p-2 rounded-full text-[18px] mt-6  cursor-pointer'>
                       <AiOutlineDelete />
                     </button>
                   </div>
@@ -282,11 +451,22 @@ function Profile() {
             </div>
           ))}
 
-          <button className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>Add TimeSlot</button>
+          <button
+            onClick={addTimeSlots}
+            className=' bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer'>
+            Add TimeSlot
+          </button>
         </div>
         <div className="mb-5">
           <p className='form__label'>About*</p>
-          <textarea name="about" rows={5} value={formData.about} placeholder=' Write about you ' onChange={handelInputChange} className=' form__input'></textarea>
+          <textarea
+            name="about"
+            rows={5}
+            value={formData.about}
+            placeholder=' Write about you '
+            onChange={handelInputChange}
+            className=' form__input'
+          ></textarea>
         </div>
         <div className="mb-5 flex items-center gap-3">
           {formData.photo && <figure className='w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center '>
@@ -310,10 +490,10 @@ function Profile() {
           </div>
         </div>
         <div className="mt-7">
-          <button 
-          type='submit'
-          onClick={updateProfileHandeler}
-          className=' bg-primaryColor text-white text-[18px] leading-[30px] w-full py-3 px-4 rounded-lg'>Update Profile</button>
+          <button
+            type='submit'
+            onClick={updateProfileHandeler}
+            className=' bg-primaryColor text-white text-[18px] leading-[30px] w-full py-3 px-4 rounded-lg'>Update Profile</button>
         </div>
       </form>
     </div>
@@ -321,3 +501,5 @@ function Profile() {
 }
 
 export default Profile
+
+
