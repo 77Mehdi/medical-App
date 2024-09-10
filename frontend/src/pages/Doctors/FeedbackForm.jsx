@@ -1,13 +1,62 @@
 import React, { useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
+import { useParams } from 'react-router-dom';
+import { BASE_URL ,token } from '../../config';
+import {toast} from 'react-toastify'
+import HashLoader from 'react-spinners/HashLoader';
+
+
 
 function FeedbackForm() {
+
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
     const [reviewText,setReviewText]=useState('');
+    const [loading ,setLoading] =useState(false)
+
+    const {id} = useParams()
+
+    //console.log('kkkkk',id)
 
     const handelSubmiteReivew = async (e)=>{
         e.preventDefault()
+
+        setLoading(true)
+
+        try {
+            
+            if(!rating || !reviewText){
+                setLoading(false)
+                
+                return  toast.error(' Rating & Review Fields are required')
+            }
+
+            const res = await fetch(`${BASE_URL}/api/doctors/${id}/reviews`,{
+                method: 'POST',
+                headers:{
+                   'Content-Type': 'application/json',
+                   Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    rating, 
+                    reviewText, 
+                  }),
+            })
+
+            const result = await res.json()
+
+            if(!res.ok){
+                throw new Error(result.msg)
+            }
+
+            setLoading(false)
+            toast.success(result.msg)
+
+        } catch (err) {
+             
+            setLoading(false)
+            toast.error(err.message)
+        }
     }
 
 
@@ -53,7 +102,7 @@ function FeedbackForm() {
                 className=' border border-solid border-[#0066ff34] focus:outline outline-primaryColor w-full px-4 py-3 rounded-md' 
                 rows="5"
                 placeholder='Write your message'
-                onClick={(e)=>setReviewText(e.target.value)}
+                onChange={(e)=>setReviewText(e.target.value)}
                 ></textarea>
 
             </div>
@@ -61,7 +110,9 @@ function FeedbackForm() {
             type='submit' 
             className='btn'
             onClick={handelSubmiteReivew}
-            >Submit Feedback</button>
+            >
+                {loading ? <HashLoader size={25} color='#fff'/> :'Submit Feedback'}
+                </button>
         </form>
     );
 }

@@ -8,13 +8,14 @@ import { MdError } from 'react-icons/md'
 import starIcon from '../../assets/images/Star.png'
 import DoctorAbout from '../../pages/Doctors/DoctorAbout'
 import Profile from './D-Profile'
+import Appointments from './Appointments'
 
 function Dashboard() {
 
 
   const { data, loading, error } = useGetProfile(`${BASE_URL}/api/doctors/profile/me`)
 
-   //console.log("first", data)
+  //console.log("first", data)
 
   const [tab, setTab] = useState('overview')
 
@@ -86,8 +87,8 @@ function Dashboard() {
                       </div>
                     )
                   }
-                  {tab === 'appointments' && <div>appointments</div>}
-                  {tab === 'settings' && <Profile doctorData={data}/>}
+                  {tab === 'appointments' && <Appointments appointments={data.appointments} />}
+                  {tab === 'settings' && <Profile doctorData={data} />}
                 </div>
 
               </div>

@@ -24,9 +24,14 @@ export const createReview = async (req, res) => {
     try {
         const savedReviw = await  newReview.save()
        
-        await Doctor.findByIdAndUpdate(req.body.doctor,{
-             $push:{reviews:savedReviw._id}
+        const updatedDoctor = await Doctor.findByIdAndUpdate(req.body.doctor,{
+             $push:{reviews:savedReviw._id},
+             new: true ,
         })
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ success: false, msg: 'Doctor not found' });
+        }
 
         res.status(200).json({ success: true, msg: 'Review submitted', data: savedReviw })
     } catch (error) {

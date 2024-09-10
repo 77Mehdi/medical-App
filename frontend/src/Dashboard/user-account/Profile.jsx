@@ -23,14 +23,15 @@ function Profile({user}) {
     const navigate = useNavigate()
   
     useEffect(()=>{
-        setFormData({
-            name:user.name ,
-            email:user.email,
-            photo:user.photo,
-            gender:user.gender,
-            bloodType:user.bloodType
-
-         })
+        if (user) {
+            setFormData({
+                name: user.name,
+                email: user.email,
+                photo: user.photo,
+                gender: user.gender,
+                bloodType: user.bloodType
+            });
+        }
     },[user])
 
     const handelForm = (e) => {
@@ -56,10 +57,10 @@ function Profile({user}) {
 
         try {
             const res = await fetch(`${BASE_URL}/api/users/${user._id}`, {
-                method: "put",
+                method: "PUT", 
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization:`Bearer ${token}`
+                   'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify(formData)
             });
@@ -186,5 +187,6 @@ function Profile({user}) {
         </div>
     )
 }
+
 
 export default Profile

@@ -6,6 +6,6 @@ import { authenticate, restrict } from '../auth/veriyfication.js'
 
 const reviewRoute = express.Router({mergeParams:true})
 
-reviewRoute.route('/').get(getllReviews).post(authenticate,restrict(["doctor"]),createReview)
+reviewRoute.route('/').get(getllReviews).post(authenticate,restrict(["patient"]),createReview)
 
 export default reviewRoute

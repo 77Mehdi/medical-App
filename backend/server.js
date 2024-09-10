@@ -46,7 +46,6 @@ const connectDB = async()=>{
 
 
 
-
 app.listen(port,()=>{
     connectDB();
     console.log(`app work on port ${port}`)
