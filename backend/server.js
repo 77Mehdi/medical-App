@@ -1,3 +1,5 @@
+import path from "path"
+
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -12,7 +14,7 @@ import bookingRoute from './router/booking.js'
 
 
 
-
+const __dirname = path.resolve()
 
 dotenv.config()
 
@@ -34,6 +36,13 @@ app.use('/api/users',userRout)
 app.use('/api/doctors',DoctorRoute)
 app.use('/api/reviews',reviewRoute)
 app.use('/api/bookings',bookingRoute)
+
+
+app.use(express.static(path.join(__dirname,"/frontend/dist")))
+
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"frontend","dist","index.html"));
+})
 
 // databese conect
 
