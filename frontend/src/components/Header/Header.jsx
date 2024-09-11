@@ -62,7 +62,7 @@ function Header() {
       <div className="container">
         <div className="flex items-center justify-between">
           <div className=' flex cursor-pointer'>
-            <img src={logo} alt="" className=' rounded-[50px] h-24 w-24' /><span className='mt-7 font-bold text-3xl'>Med<span className=' text-red-400'>icare</span></span>
+            <img src={logo} alt="" className=' rounded-[50px] h-24 w-24 md:h-16 md:w-16' /><span className='mt-7 font-bold text-3xl'>Med<span className=' text-red-400'>icare</span></span>
           </div>
           <div className=' navigation' ref={menuRef} onClick={toggleMenu}>
             <ul className=' menu flex items-center gap-[2.7rem]'>
