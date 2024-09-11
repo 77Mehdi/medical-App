@@ -106,7 +106,7 @@ export const getMyAppointments = async (req, res) => {
         const doctorId = bookings.map(E => E.doctor.id)
 
         // 3 get the doctors using doctor id using step 2
-        const doctors = await Doctor.find({ id: { $in: doctorId } }).select('-password')
+        const doctors = await Doctor.find({ _id: { $in: doctorId } }).select('-password')
 
 
         res.status(200).json({
@@ -115,7 +115,7 @@ export const getMyAppointments = async (req, res) => {
             data: doctors
         })
 
-
+       //console.log(doctors)
     } catch (error) {
         res.status(500).json({
             success: false,

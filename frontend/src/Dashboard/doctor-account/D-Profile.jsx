@@ -46,6 +46,8 @@ function Profile({ doctorData }) {
     setformData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  
+
   const handelFilechange = async (e) => {
 
     const file = e.target.files[0];
@@ -57,6 +59,7 @@ function Profile({ doctorData }) {
 
   const updateProfileHandeler = async (e) => {
     e.preventDefault()
+    // console.log("first",formData.ticketPrice)
 
     try {
 
@@ -259,7 +262,7 @@ function Profile({ doctorData }) {
             </div>
             <div >
               <p className=' form_label mb-3'>Ticket Price*</p>
-              <input type="number" placeholder='100' name='ticketPrice' value={formData.ticketPrice} className=' form__input' />
+              <input type="number" placeholder='100' name='ticketPrice' value={formData.ticketPrice} onChange={handelInputChange}  className=' form__input' />
             </div>
 
           </div>

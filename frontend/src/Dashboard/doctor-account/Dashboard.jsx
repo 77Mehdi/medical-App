@@ -32,7 +32,7 @@ function Dashboard() {
           !loading && !error && (
 
             <div className="grid lg:grid-cols-3 gap-[30px] lg:gap-[50px]">
-              <Tabs tab={tab} setTab={setTab} />
+              <Tabs tab={tab} setTab={setTab} /> 
 
               <div className="lg:col-span-2">
                 {
