@@ -1,17 +1,13 @@
 {
   "name": "doctore-app",
   "version": "1.0.0",
-  "description": "\"# midicale-App\"",
-  "main": "server.js",
+  "private": true,
   "type": "module",
   "scripts": {
     "server": "nodemon backend/server.js",
-    "start":"node backend/server.js",
-    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "start": "node backend/server.js",
+    "build": "echo 'root build ignored by vercel'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
